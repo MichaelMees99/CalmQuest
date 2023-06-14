@@ -17,16 +17,6 @@ const server = new ApolloServer({
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Define the login route
-app.post('/login', (req, res) => {
-  // Handle the login logic here
-});
-
-// Define the signup route
-app.post('/signup', (req, res) => {
-  // Handle the signup logic here
-});
-
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));
 }
@@ -35,18 +25,20 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 
+
+
 const startApolloServer = async (typeDefs, resolvers) => {
   await server.start();
   server.applyMiddleware({ app });
-
+  
   db.once('open', () => {
     app.listen(PORT, () => {
       console.log(`API server running on port ${PORT}!`);
       console.log(`Use GraphQL at http://localhost:${PORT}${server.graphqlPath}`);
-    });
-  });
-};
-
+    })
+  })
+  };
+  
 // Call the async function to start the server
-startApolloServer(typeDefs, resolvers);
+  startApolloServer(typeDefs, resolvers);
 
