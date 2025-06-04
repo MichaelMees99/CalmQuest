@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_TASKS } from '../utils/queries';
 import { random } from '../utils/randomizer';
+import WeeklyTaskItem from './WeeklyTaskItem';
 
 function getWeekKey(date = new Date()) {
   const firstDay = new Date(date.getFullYear(), 0, 1);
@@ -11,28 +12,50 @@ function getWeekKey(date = new Date()) {
 
 const WeeklyQuest = () => {
   const { data } = useQuery(GET_TASKS);
-  const [quest, setQuest] = useState('');
+  const [tasks, setTasks] = useState([]);
+  const [checkedTasks, setCheckedTasks] = useState([]);
 
   useEffect(() => {
     const currentWeek = getWeekKey();
-    const storedWeek = localStorage.getItem('weeklyQuestWeek');
-    let q;
+    const storedWeek = localStorage.getItem('weeklyWeek');
+    let weekTasks;
+
     if (storedWeek === currentWeek) {
-      q = localStorage.getItem('weeklyQuest');
+      weekTasks = JSON.parse(localStorage.getItem('weeklyTasks'));
+      const storedChecked = JSON.parse(localStorage.getItem('weeklyCheckedTasks')) || [];
+      setCheckedTasks(storedChecked.length ? storedChecked : new Array(weekTasks.length).fill(false));
     } else if (data?.tasks) {
-      q = random(data.tasks)[0].task;
-      localStorage.setItem('weeklyQuest', q);
-      localStorage.setItem('weeklyQuestWeek', currentWeek);
+      weekTasks = random(data.tasks).slice(0, 3);
+      localStorage.setItem('weeklyTasks', JSON.stringify(weekTasks));
+      localStorage.setItem('weeklyWeek', currentWeek);
+      const defaultChecked = new Array(weekTasks.length).fill(false);
+      localStorage.setItem('weeklyCheckedTasks', JSON.stringify(defaultChecked));
+      setCheckedTasks(defaultChecked);
     }
-    if (q) {
-      setQuest(q);
+
+    if (weekTasks) {
+      setTasks(weekTasks);
     }
   }, [data]);
 
+  useEffect(() => {
+    localStorage.setItem('weeklyCheckedTasks', JSON.stringify(checkedTasks));
+  }, [checkedTasks]);
+
   return (
-    <div className="bg-white bg-opacity-80 p-4 rounded-lg shadow mt-4 text-center">
-      <p className="font-nexa font-bold text-emerald-500">Weekly Quest:</p>
-      <p className="mt-2">{quest}</p>
+    <div className="mt-4">
+      <p className="text-xl lg:text-2xl text-center bg-gradient-to-l from-emerald-600 via-emerald-500 to-emerald-600 bg-clip-text text-transparent font-nexa font-bold">Weekly Quests:</p>
+      <ul className="mb-6 mx-auto w-1/2">
+        {tasks.map((task, index) => (
+          <WeeklyTaskItem
+            key={index}
+            task={task.task}
+            index={index}
+            checkedTasks={checkedTasks}
+            setCheckedTasks={setCheckedTasks}
+          />
+        ))}
+      </ul>
     </div>
   );
 };

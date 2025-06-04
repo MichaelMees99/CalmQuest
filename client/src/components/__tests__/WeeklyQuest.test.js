@@ -12,5 +12,5 @@ import WeeklyQuest from '../WeeklyQuest';
 
 test('renders weekly quest header', () => {
   render(<WeeklyQuest />);
-  expect(screen.getByText('Weekly Quest:')).toBeInTheDocument();
+  expect(screen.getByText('Weekly Quests:')).toBeInTheDocument();
 });

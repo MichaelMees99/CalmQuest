@@ -46,11 +46,14 @@ export const Home = () => {
     if (canvasRef.current) {
       gradient.current.initGradient(`#${canvasRef.current.id}`, COLORS);
       let pos = 0;
-      const interval = setInterval(() => {
-        pos = (pos + 2) % 1000;
+      let frame;
+      const animate = () => {
+        pos = (pos + 0.1) % 1000;
         gradient.current.changePosition(pos);
-      }, 100);
-      return () => clearInterval(interval);
+        frame = requestAnimationFrame(animate);
+      };
+      frame = requestAnimationFrame(animate);
+      return () => cancelAnimationFrame(frame);
     }
   }, []);
 
