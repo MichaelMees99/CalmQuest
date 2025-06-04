@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getZenQuote } from '../api/quoteApi';
 import TaskList from './TaskList';
+import WeeklyQuest from './WeeklyQuest';
 import { fetchHealthResources } from '../api/HealthApi';
 import HealthResourceList from './healthResourceList';
 import MeshGradient from 'mesh-gradient.js';
@@ -104,6 +105,7 @@ export const Home = () => {
                 <p className="text-xl lg:text-2xl text-center justify-center bg-gradient-to-l from-emerald-600 via-emerald-500 to-emerald-600 bg-clip-text text-transparent font-nexa font-bold">Daily Quests:</p>
 
                 <TaskList />
+                <WeeklyQuest />
               </div>
               <div className=" w-full p-4 lg:p-8 bg-opacity-80  bg-white rounded-lg shadow">
                 <p className="text-xl lg:text-2xl text-center bg-gradient-to-l from-emerald-600 via-emerald-500 to-emerald-600 bg-clip-text text-transparent font-nexa font-bold">Today's Inspiring Quote:</p>

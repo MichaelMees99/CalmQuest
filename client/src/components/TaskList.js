@@ -16,20 +16,22 @@ const TaskList = () => {
     let randomTasks;
 
     if (storedDate === today) {
-      // If the tasks for the current date have already been stored, use them
+      // Use stored tasks for today
       randomTasks = JSON.parse(localStorage.getItem('tasks'));
+      const storedCheckedTasks = JSON.parse(localStorage.getItem('checkedTasks')) || [];
+      setCheckedTasks(storedCheckedTasks.length ? storedCheckedTasks : new Array(randomTasks.length).fill(false));
     } else if (data?.tasks) {
-      // If there are no tasks for the current date, generate and store new tasks
+      // Generate new tasks for a new day
       randomTasks = random(data.tasks).slice(0, 4);
       localStorage.setItem('tasks', JSON.stringify(randomTasks));
       localStorage.setItem('tasksDate', today);
+      const defaultCheckedTasks = new Array(randomTasks.length).fill(false);
+      localStorage.setItem('checkedTasks', JSON.stringify(defaultCheckedTasks));
+      setCheckedTasks(defaultCheckedTasks);
     }
 
     if (randomTasks) {
       setTasks(randomTasks);
-      // Load the checked state from localStorage, or initialize with false if not present
-      const storedCheckedTasks = JSON.parse(localStorage.getItem('checkedTasks')) || new Array(randomTasks.length).fill(false);
-      setCheckedTasks(storedCheckedTasks);
     }
   }, [data]);
 
