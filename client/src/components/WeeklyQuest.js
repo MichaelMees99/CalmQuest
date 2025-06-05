@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useQuery } from '@apollo/client';
-import { GET_TASKS } from '../utils/queries';
 import { random } from '../utils/randomizer';
 import WeeklyTaskItem from './WeeklyTaskItem';
 import ConfettiAnimation from './ConfettiAnimation';
@@ -12,12 +10,19 @@ function getWeekKey(date = new Date()) {
 }
 
 const WeeklyQuest = () => {
-  const { data } = useQuery(GET_TASKS);
   const [tasks, setTasks] = useState([]);
   const [checkedTasks, setCheckedTasks] = useState([]);
   const [showConfetti, setShowConfetti] = useState(false);
 
   useEffect(() => {
+    const weeklyPool = [
+      { task: 'Spend 30 minutes meditating' },
+      { task: 'Write in a gratitude journal each day' },
+      { task: 'Try a new relaxation technique' },
+      { task: 'Take a long walk outdoors' },
+      { task: 'Do a one-day digital detox' },
+    ];
+
     const currentWeek = getWeekKey();
     const storedWeek = localStorage.getItem('weeklyWeek');
     let weekTasks;
@@ -25,9 +30,11 @@ const WeeklyQuest = () => {
     if (storedWeek === currentWeek) {
       weekTasks = JSON.parse(localStorage.getItem('weeklyTasks'));
       const storedChecked = JSON.parse(localStorage.getItem('weeklyCheckedTasks')) || [];
-      setCheckedTasks(storedChecked.length ? storedChecked : new Array(weekTasks.length).fill(false));
-    } else if (data?.tasks) {
-      weekTasks = random(data.tasks).slice(0, 3);
+      setCheckedTasks(
+        storedChecked.length ? storedChecked : new Array(weekTasks.length).fill(false)
+      );
+    } else {
+      weekTasks = random(weeklyPool).slice(0, 2);
       localStorage.setItem('weeklyTasks', JSON.stringify(weekTasks));
       localStorage.setItem('weeklyWeek', currentWeek);
       const defaultChecked = new Array(weekTasks.length).fill(false);
@@ -38,7 +45,7 @@ const WeeklyQuest = () => {
     if (weekTasks) {
       setTasks(weekTasks);
     }
-  }, [data]);
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('weeklyCheckedTasks', JSON.stringify(checkedTasks));
@@ -54,7 +61,7 @@ const WeeklyQuest = () => {
   return (
     <div className="mt-4">
       <ConfettiAnimation trigger={showConfetti} />
-      <p className="text-xl lg:text-2xl text-center bg-gradient-to-l from-emerald-600 via-emerald-500 to-emerald-600 bg-clip-text text-transparent font-nexa font-bold">Weekly Quests:</p>
+      <p className="text-xl lg:text-2xl bg-gradient-to-l from-emerald-600 via-emerald-500 to-emerald-600 bg-clip-text text-transparent font-nexa font-bold mb-2">Weekly Quests:</p>
       <ul className="mb-6 mx-auto w-full">
         {tasks.map((task, index) => (
           <WeeklyTaskItem

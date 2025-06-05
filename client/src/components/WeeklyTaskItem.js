@@ -16,6 +16,10 @@ const WeeklyTaskItem = ({ task, index, checkedTasks, setCheckedTasks, onComplete
   }));
 
   useEffect(() => {
+    setIsChecked(checkedTasks[index] || false);
+  }, [checkedTasks, index]);
+
+  useEffect(() => {
     if (isMouseDown) {
       setFillAnimation({
         width: '100%',

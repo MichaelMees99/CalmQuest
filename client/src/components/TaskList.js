@@ -23,7 +23,7 @@ const TaskList = () => {
       setCheckedTasks(storedCheckedTasks.length ? storedCheckedTasks : new Array(randomTasks.length).fill(false));
     } else if (data?.tasks) {
       // Generate new tasks for a new day
-      randomTasks = random(data.tasks).slice(0, 4);
+      randomTasks = random(data.tasks).slice(0, 3);
       localStorage.setItem('tasks', JSON.stringify(randomTasks));
       localStorage.setItem('tasksDate', today);
       const defaultCheckedTasks = new Array(randomTasks.length).fill(false);
@@ -49,19 +49,22 @@ const TaskList = () => {
   }, [showConfetti]);
 
   return (
-    <ul className="mb-6 mx-auto w-full">
-      <ConfettiAnimation trigger={showConfetti} />
-      {tasks.map((task, index) => (
-        <TaskItem
-          key={index}
-          task={task.task} // Pass the task's "task" property to TaskItem component
-          index={index}
-          checkedTasks={checkedTasks}
-          setCheckedTasks={setCheckedTasks}
-          onComplete={() => setShowConfetti(true)}
-        />
-      ))}
-    </ul>
+    <div>
+      <p className="text-xl lg:text-2xl bg-gradient-to-l from-emerald-600 via-emerald-500 to-emerald-600 bg-clip-text text-transparent font-nexa font-bold mb-2">Daily Quests:</p>
+      <ul className="mb-6 mx-auto w-full">
+        <ConfettiAnimation trigger={showConfetti} />
+        {tasks.map((task, index) => (
+          <TaskItem
+            key={index}
+            task={task.task} // Pass the task's "task" property to TaskItem component
+            index={index}
+            checkedTasks={checkedTasks}
+            setCheckedTasks={setCheckedTasks}
+            onComplete={() => setShowConfetti(true)}
+          />
+        ))}
+      </ul>
+    </div>
   );
 };
 
