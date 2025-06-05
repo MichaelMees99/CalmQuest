@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/client';
 import { GET_TASKS } from '../utils/queries';
 import { random } from '../utils/randomizer';
 import WeeklyTaskItem from './WeeklyTaskItem';
+import ConfettiAnimation from './ConfettiAnimation';
 
 function getWeekKey(date = new Date()) {
   const firstDay = new Date(date.getFullYear(), 0, 1);
@@ -14,6 +15,7 @@ const WeeklyQuest = () => {
   const { data } = useQuery(GET_TASKS);
   const [tasks, setTasks] = useState([]);
   const [checkedTasks, setCheckedTasks] = useState([]);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   useEffect(() => {
     const currentWeek = getWeekKey();
@@ -42,8 +44,16 @@ const WeeklyQuest = () => {
     localStorage.setItem('weeklyCheckedTasks', JSON.stringify(checkedTasks));
   }, [checkedTasks]);
 
+  useEffect(() => {
+    if (showConfetti) {
+      const timer = setTimeout(() => setShowConfetti(false), 200);
+      return () => clearTimeout(timer);
+    }
+  }, [showConfetti]);
+
   return (
     <div className="mt-4">
+      <ConfettiAnimation trigger={showConfetti} />
       <p className="text-xl lg:text-2xl text-center bg-gradient-to-l from-emerald-600 via-emerald-500 to-emerald-600 bg-clip-text text-transparent font-nexa font-bold">Weekly Quests:</p>
       <ul className="mb-6 mx-auto w-1/2">
         {tasks.map((task, index) => (
@@ -53,6 +63,7 @@ const WeeklyQuest = () => {
             index={index}
             checkedTasks={checkedTasks}
             setCheckedTasks={setCheckedTasks}
+            onComplete={() => setShowConfetti(true)}
           />
         ))}
       </ul>

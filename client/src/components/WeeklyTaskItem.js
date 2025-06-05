@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSpring, animated } from 'react-spring';
 
-const WeeklyTaskItem = ({ task, index, checkedTasks, setCheckedTasks }) => {
+const WeeklyTaskItem = ({ task, index, checkedTasks, setCheckedTasks, onComplete }) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [timerId, setTimerId] = useState(null);
   const [isChecked, setIsChecked] = useState(() => {
@@ -29,6 +29,7 @@ const WeeklyTaskItem = ({ task, index, checkedTasks, setCheckedTasks }) => {
           const newChecked = [...checkedTasks];
           newChecked[index] = true;
           setCheckedTasks(newChecked);
+          if (onComplete) onComplete();
         }, 1500)
       );
     } else {
