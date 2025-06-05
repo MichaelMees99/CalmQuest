@@ -9,6 +9,7 @@ const TaskList = () => {
   const { data } = useQuery(GET_TASKS);
   const [tasks, setTasks] = useState([]);
   const [checkedTasks, setCheckedTasks] = useState([]);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   useEffect(() => {
     const today = new Date().toISOString().slice(0, 10); // Current date in 'YYYY-MM-DD' format
@@ -40,9 +41,16 @@ const TaskList = () => {
     localStorage.setItem('checkedTasks', JSON.stringify(checkedTasks));
   }, [checkedTasks]);
 
+  useEffect(() => {
+    if (showConfetti) {
+      const timer = setTimeout(() => setShowConfetti(false), 200);
+      return () => clearTimeout(timer);
+    }
+  }, [showConfetti]);
+
   return (
     <ul className="mb-6 mx-auto w-1/2">
-      <ConfettiAnimation allTasksDone={checkedTasks.every(Boolean)} />
+      <ConfettiAnimation trigger={showConfetti} />
       {tasks.map((task, index) => (
         <TaskItem
           key={index}
@@ -50,6 +58,7 @@ const TaskList = () => {
           index={index}
           checkedTasks={checkedTasks}
           setCheckedTasks={setCheckedTasks}
+          onComplete={() => setShowConfetti(true)}
         />
       ))}
     </ul>

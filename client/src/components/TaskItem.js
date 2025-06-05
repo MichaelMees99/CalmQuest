@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSpring, animated } from 'react-spring';
 
-const TaskItem = ({ task, index, checkedTasks, setCheckedTasks }) => {
+const TaskItem = ({ task, index, checkedTasks, setCheckedTasks, onComplete }) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [timerId, setTimerId] = useState(null);
   const [isChecked, setIsChecked] = useState(() => JSON.parse(localStorage.getItem('checkedTasks'))[index] || false);
@@ -23,12 +23,15 @@ const TaskItem = ({ task, index, checkedTasks, setCheckedTasks }) => {
           backgroundColor: 'transparent',
         },
       });
-      setTimerId(setTimeout(() => {
-        setIsChecked(true);
-        const newCheckedTasks = [...checkedTasks];
-        newCheckedTasks[index] = true;
-        setCheckedTasks(newCheckedTasks);
-      }, 1500));
+      setTimerId(
+        setTimeout(() => {
+          setIsChecked(true);
+          const newCheckedTasks = [...checkedTasks];
+          newCheckedTasks[index] = true;
+          setCheckedTasks(newCheckedTasks);
+          if (onComplete) onComplete();
+        }, 1500)
+      );
     } else {
       setFillAnimation({
         width: '0%',

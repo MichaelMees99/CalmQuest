@@ -15,16 +15,16 @@ const ConfettiConfig = {
   colors: ['#a864fd', '#29cdff', '#78ff44', '#ff718d', '#fdff6a'],
 };
 
-const ConfettiAnimation = ({ allTasksDone }) => {
+const ConfettiAnimation = ({ trigger }) => {
   const [active, setActive] = useState(false);
 
   useEffect(() => {
-    if (allTasksDone) {
+    if (trigger) {
       setActive(true);
       const timer = setTimeout(() => setActive(false), 100);
       return () => clearTimeout(timer);
     }
-  }, [allTasksDone]);
+  }, [trigger]);
 
   return (
     <div
