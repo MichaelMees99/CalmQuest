@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { getZenQuote } from '../api/quoteApi';
 import TaskList from './TaskList';
 import WeeklyQuest from './WeeklyQuest';
-import { fetchHealthResources } from '../api/HealthApi';
-import HealthResourceList from './healthResourceList';
 import MeshGradient from 'mesh-gradient.js';
 //import { useQuery } from '@apollo/client';
 //import { ME } from "../utils/queries";
@@ -18,8 +16,6 @@ export const Home = () => {
   const navigate = useNavigate();
   const [quoteData, setQuoteData] = useState({ quote: "", author: "" });
   const [modalOpen, setModalOpen] = useState(false);
-  const [healthResources, setHealthResources] = useState([]);
-  const [search, setSearch] = useState("");
   const [profileOpen, setProfileOpen] = useState(false); // State for profile modal
 
   //const { data } = useQuery(ME);
@@ -33,13 +29,7 @@ export const Home = () => {
       setQuoteData(fetchedQuoteData);
     };
 
-    const loadResources = async () => {
-      const resources = await fetchHealthResources();
-      setHealthResources(resources);
-    };
-
     fetchQuote();
-    loadResources();
   }, []);
 
   useEffect(() => {
@@ -65,13 +55,6 @@ export const Home = () => {
     setModalOpen(false);
   };
 
-  const handleSearch = (event) => {
-    setSearch(event.target.value);
-  };
-
-  const handleResourceClick = (resource) => {
-    console.log(resource);
-  };
   useEffect(() => {
     if (!logged) {
       navigate("./login");
@@ -96,9 +79,6 @@ export const Home = () => {
               <div>
                 <h2 className="text-2xl lg:text-3xl mb-4 text-emerald-500 font-nexa font-bold">CalmQuest</h2>
                 <button className="text-sm text-emerald-500 mt-4" onClick={openProfileModal}>Profile</button> {/* Profile Button */}
-                <div className='flex flex-col lg:flex-row'>
-                  <HealthResourceList healthResources={healthResources} handleResourceClick={handleResourceClick} search={search} handleSearch={handleSearch}/>
-                </div>
               </div>
               <p>
                 <a href="/login" onClick={() => Auth.logout()}>
