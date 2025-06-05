@@ -4,7 +4,10 @@ import { useSpring, animated } from 'react-spring';
 const TaskItem = ({ task, index, checkedTasks, setCheckedTasks, onComplete }) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [timerId, setTimerId] = useState(null);
-  const [isChecked, setIsChecked] = useState(() => JSON.parse(localStorage.getItem('checkedTasks'))[index] || false);
+  const [isChecked, setIsChecked] = useState(() => {
+    const stored = JSON.parse(localStorage.getItem('checkedTasks')) || [];
+    return stored[index] || false;
+  });
   
   const [fillAnimation, setFillAnimation] = useSpring(() => ({
     width: '0%',
@@ -60,17 +63,16 @@ const TaskItem = ({ task, index, checkedTasks, setCheckedTasks, onComplete }) =>
   };
 
   return (
-    <li className="mb-2 bg-white bg-opacity-80">
-      <button 
+    <li className="mb-3">
+      <button
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
         disabled={isChecked} 
-        className={`relative overflow-hidden font-mono text-2xl text-left w-full py-2 rounded shadow transition-colors duration-300 border border-black ${
-          isChecked ? 'bg-green-300' : 'hover:bg-stone-200'
+        className={`relative overflow-hidden w-full py-4 px-6 rounded-lg shadow border border-black font-nexa text-xl lg:text-2xl text-left ${
+          isChecked ? 'bg-green-300' : 'bg-white bg-opacity-70 hover:bg-stone-200'
         } transform transition-transform duration-200 ease-in-out hover:scale-105`}
-        style={{transitionProperty: 'background-color, transform',
-        transitionDuration: '0.3s',}}
+        style={{ transitionProperty: 'background-color, transform', transitionDuration: '0.3s' }}
       >
         {isChecked && <span className="mr-2 ml-2 text-green-800 text-2xl">✓</span>}
         <span className={`${isChecked ? 'line-through text-green-800' : ''} ml-4`}>{task}</span>

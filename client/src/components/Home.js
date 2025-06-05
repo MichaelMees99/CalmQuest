@@ -48,7 +48,7 @@ export const Home = () => {
       let pos = 0;
       let frame;
       const animate = () => {
-        pos = (pos + 0.02) % 1000;
+        pos = (pos + 0.005) % 1000;
         gradient.current.changePosition(pos);
         frame = requestAnimationFrame(animate);
       };
@@ -91,8 +91,8 @@ export const Home = () => {
       {logged ? (
         <div className="flex flex-col w-screen min-h-screen relative">
           <canvas id="my-canvas" ref={canvasRef} className="w-full h-full absolute top-0 left-0" />
-          <div className="flex flex-col lg:flex-row flex-grow relative">
-            <div className="bg-white w-full lg:w-2/12 p-4 lg:p-8 flex flex-col justify-between h-full overflow-y-auto">
+          <div className="flex flex-col lg:flex-row flex-grow relative h-screen overflow-hidden">
+            <div className="bg-white w-full lg:w-2/12 p-4 lg:p-8 flex flex-col justify-between h-full lg:min-h-screen overflow-y-auto">
               <div>
                 <h2 className="text-2xl lg:text-3xl mb-4 text-emerald-500 font-nexa font-bold">CalmQuest</h2>
                 <button className="text-sm text-emerald-500 mt-4" onClick={openProfileModal}>Profile</button> {/* Profile Button */}
@@ -107,7 +107,7 @@ export const Home = () => {
               </p>
             </div>
 
-            <div className="w-full lg:w-10/12 p-4 lg:p-8 flex flex-col items-start justify-start">
+            <div className="w-full lg:w-10/12 p-4 lg:p-8 flex flex-col items-start justify-start overflow-y-auto">
               <div className="bg-white bg-opacity-80  rounded-lg shadow p-4 lg:p-8 w-full overflow-auto mb-6">
                 <h1 className="text-2xl lg:text-4xl mb-4 text-center">Welcome to <span className="text-3xl lg:text-5xl font-nexa font-bold text-emerald-500">CalmQuest</span></h1>
                 <p className="text-xl lg:text-2xl text-center justify-center bg-gradient-to-l from-emerald-600 via-emerald-500 to-emerald-600 bg-clip-text text-transparent font-nexa font-bold">Daily Quests:</p>

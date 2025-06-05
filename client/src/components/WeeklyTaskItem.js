@@ -56,14 +56,14 @@ const WeeklyTaskItem = ({ task, index, checkedTasks, setCheckedTasks, onComplete
   };
 
   return (
-    <li className="mb-2 bg-white bg-opacity-80">
+    <li className="mb-3">
       <button
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
         disabled={isChecked}
-        className={`relative overflow-hidden font-mono text-2xl text-left w-full py-2 rounded shadow transition-colors duration-300 border border-black ${
-          isChecked ? 'bg-green-300' : 'hover:bg-stone-200'
+        className={`relative overflow-hidden w-full py-4 px-6 rounded-lg shadow border border-black font-nexa text-xl lg:text-2xl text-left ${
+          isChecked ? 'bg-green-300' : 'bg-white bg-opacity-70 hover:bg-stone-200'
         } transform transition-transform duration-200 ease-in-out hover:scale-105`}
         style={{ transitionProperty: 'background-color, transform', transitionDuration: '0.3s' }}
       >

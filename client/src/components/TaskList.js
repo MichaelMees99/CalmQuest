@@ -49,7 +49,7 @@ const TaskList = () => {
   }, [showConfetti]);
 
   return (
-    <ul className="mb-6 mx-auto w-1/2">
+    <ul className="mb-6 mx-auto w-full">
       <ConfettiAnimation trigger={showConfetti} />
       {tasks.map((task, index) => (
         <TaskItem

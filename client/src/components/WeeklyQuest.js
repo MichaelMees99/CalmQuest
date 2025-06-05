@@ -55,7 +55,7 @@ const WeeklyQuest = () => {
     <div className="mt-4">
       <ConfettiAnimation trigger={showConfetti} />
       <p className="text-xl lg:text-2xl text-center bg-gradient-to-l from-emerald-600 via-emerald-500 to-emerald-600 bg-clip-text text-transparent font-nexa font-bold">Weekly Quests:</p>
-      <ul className="mb-6 mx-auto w-1/2">
+      <ul className="mb-6 mx-auto w-full">
         {tasks.map((task, index) => (
           <WeeklyTaskItem
             key={index}
