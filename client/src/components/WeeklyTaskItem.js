@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useSpring, animated } from 'react-spring';
 
-const TaskItem = ({ task, index, checkedTasks, setCheckedTasks, onComplete }) => {
+const WeeklyTaskItem = ({ task, index, checkedTasks, setCheckedTasks, onComplete }) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [timerId, setTimerId] = useState(null);
   const [isChecked, setIsChecked] = useState(() => {
-    const stored = JSON.parse(localStorage.getItem('checkedTasks')) || [];
+    const stored = JSON.parse(localStorage.getItem('weeklyCheckedTasks')) || [];
     return stored[index] || false;
   });
-  
+
   const [fillAnimation, setFillAnimation] = useSpring(() => ({
     width: '0%',
     backgroundColor: 'transparent',
@@ -25,17 +25,14 @@ const TaskItem = ({ task, index, checkedTasks, setCheckedTasks, onComplete }) =>
         width: '100%',
         backgroundColor: 'rgba(0, 255, 0, 0.2)',
         reset: true,
-        from: {
-          width: '0%',
-          backgroundColor: 'transparent',
-        },
+        from: { width: '0%', backgroundColor: 'transparent' },
       });
       setTimerId(
         setTimeout(() => {
           setIsChecked(true);
-          const newCheckedTasks = [...checkedTasks];
-          newCheckedTasks[index] = true;
-          setCheckedTasks(newCheckedTasks);
+          const newChecked = [...checkedTasks];
+          newChecked[index] = true;
+          setCheckedTasks(newChecked);
           if (onComplete) onComplete();
         }, 1500)
       );
@@ -54,13 +51,9 @@ const TaskItem = ({ task, index, checkedTasks, setCheckedTasks, onComplete }) =>
     return () => {
       clearTimeout(timerId);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMouseDown, index]);
 
-  const handleMouseDown = () => {
-    setIsMouseDown(true);
-  };
-
+  const handleMouseDown = () => setIsMouseDown(true);
   const handleMouseUp = () => {
     setIsMouseDown(false);
     clearTimeout(timerId);
@@ -72,7 +65,7 @@ const TaskItem = ({ task, index, checkedTasks, setCheckedTasks, onComplete }) =>
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
-        disabled={isChecked} 
+        disabled={isChecked}
         className={`relative overflow-hidden w-full py-4 px-6 rounded-lg shadow border border-black font-nexa text-xl lg:text-2xl text-left ${
           isChecked ? 'bg-green-300' : 'bg-white bg-opacity-70 hover:bg-stone-200'
         } transform transition-transform duration-200 ease-in-out hover:scale-105`}
@@ -80,7 +73,9 @@ const TaskItem = ({ task, index, checkedTasks, setCheckedTasks, onComplete }) =>
       >
         {isChecked && <span className="mr-2 ml-2 text-green-800 text-2xl">✓</span>}
         <span className={`${isChecked ? 'line-through text-green-800' : ''} ml-4`}>{task}</span>
-        {isChecked && <span className="text-green-500 text-xl absolute top-0 right-0 mr-2 mt-2">Quest Complete</span>}
+        {isChecked && (
+          <span className="text-green-500 text-xl absolute top-0 right-0 mr-2 mt-2">Quest Complete</span>
+        )}
         {isMouseDown && (
           <animated.div
             style={{
@@ -97,4 +92,4 @@ const TaskItem = ({ task, index, checkedTasks, setCheckedTasks, onComplete }) =>
   );
 };
 
-export default TaskItem;
+export default WeeklyTaskItem;
