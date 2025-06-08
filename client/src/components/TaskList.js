@@ -51,6 +51,13 @@ const TaskList = ({ onProgressChange = () => {} }) => {
     }
   }, [showConfetti]);
 
+  useEffect(() => {
+    if (showConfetti) {
+      const timer = setTimeout(() => setShowConfetti(false), 200);
+      return () => clearTimeout(timer);
+    }
+  }, [showConfetti]);
+
   return (
     <div>
       <p className="text-xl lg:text-2xl bg-gradient-to-l from-emerald-600 via-emerald-500 to-emerald-600 bg-clip-text text-transparent font-nexa font-bold mb-2">Daily Quests:</p>
