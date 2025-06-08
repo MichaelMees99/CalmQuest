@@ -5,7 +5,7 @@ import { useQuery } from '@apollo/client';
 import { GET_TASKS } from "../utils/queries";
 import { random } from '../utils/randomizer';
 
-const TaskList = () => {
+const TaskList = ({ onProgressChange = () => {} }) => {
   const { data } = useQuery(GET_TASKS);
   const [tasks, setTasks] = useState([]);
   const [checkedTasks, setCheckedTasks] = useState([]);
@@ -21,6 +21,7 @@ const TaskList = () => {
       randomTasks = JSON.parse(localStorage.getItem('tasks'));
       const storedCheckedTasks = JSON.parse(localStorage.getItem('checkedTasks')) || [];
       setCheckedTasks(storedCheckedTasks.length ? storedCheckedTasks : new Array(randomTasks.length).fill(false));
+      onProgressChange();
     } else if (data?.tasks) {
       // Generate new tasks for a new day
       randomTasks = random(data.tasks).slice(0, 3);
@@ -29,6 +30,7 @@ const TaskList = () => {
       const defaultCheckedTasks = new Array(randomTasks.length).fill(false);
       localStorage.setItem('checkedTasks', JSON.stringify(defaultCheckedTasks));
       setCheckedTasks(defaultCheckedTasks);
+      onProgressChange();
     }
 
     if (randomTasks) {
@@ -39,7 +41,15 @@ const TaskList = () => {
   useEffect(() => {
     // Store the checked state in localStorage whenever it changes
     localStorage.setItem('checkedTasks', JSON.stringify(checkedTasks));
-  }, [checkedTasks]);
+    onProgressChange();
+  }, [checkedTasks, onProgressChange]);
+
+  useEffect(() => {
+    if (showConfetti) {
+      const timer = setTimeout(() => setShowConfetti(false), 200);
+      return () => clearTimeout(timer);
+    }
+  }, [showConfetti]);
 
   useEffect(() => {
     if (showConfetti) {

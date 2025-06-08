@@ -9,7 +9,7 @@ function getWeekKey(date = new Date()) {
   return `${date.getFullYear()}-W${Math.ceil((dayOfYear + firstDay.getDay() + 1) / 7)}`;
 }
 
-const WeeklyQuest = () => {
+const WeeklyQuest = ({ onProgressChange = () => {} }) => {
   const [tasks, setTasks] = useState([]);
   const [checkedTasks, setCheckedTasks] = useState([]);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -33,6 +33,7 @@ const WeeklyQuest = () => {
       setCheckedTasks(
         storedChecked.length ? storedChecked : new Array(weekTasks.length).fill(false)
       );
+      onProgressChange();
     } else {
       weekTasks = random(weeklyPool).slice(0, 2);
       localStorage.setItem('weeklyTasks', JSON.stringify(weekTasks));
@@ -40,6 +41,7 @@ const WeeklyQuest = () => {
       const defaultChecked = new Array(weekTasks.length).fill(false);
       localStorage.setItem('weeklyCheckedTasks', JSON.stringify(defaultChecked));
       setCheckedTasks(defaultChecked);
+      onProgressChange();
     }
 
     if (weekTasks) {
@@ -49,7 +51,8 @@ const WeeklyQuest = () => {
 
   useEffect(() => {
     localStorage.setItem('weeklyCheckedTasks', JSON.stringify(checkedTasks));
-  }, [checkedTasks]);
+    onProgressChange();
+  }, [checkedTasks, onProgressChange]);
 
   useEffect(() => {
     if (showConfetti) {
